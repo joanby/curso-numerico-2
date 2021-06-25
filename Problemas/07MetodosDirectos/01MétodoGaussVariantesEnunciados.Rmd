@@ -1,0 +1,95 @@
+---
+title: "Problemas de métodos directos para resolver sistemas lineales. Método de Gauss y variantes."
+author: ""
+date: ""
+output:
+  pdf_document: default
+              
+  html_document: default
+---
+
+\newcommand{\m}[1]{\mathbf{#1}}
+\newcommand{\s}[2]{\mathbf{#1}^{(#2)}}
+\newcommand{\pe}[2]{#1^\top #2}
+
+```{r,echo=FALSE}
+write_matex2 <- function(x) {
+  begin <- "\\begin{bmatrix}"
+  end <- "\\end{bmatrix}"
+  X <-
+    apply(x, 1, function(x) {
+      paste(
+        paste(x, collapse = "&"),
+        "\\\\"
+      )
+    })
+  paste(c(begin, X, end), collapse = "")
+}
+write_matex3 <- function(x) {
+  begin <- "\\begin{vmatrix}"
+  end <- "\\end{vmatrix}"
+  X <-
+    apply(x, 1, function(x) {
+      paste(
+        paste(x, collapse = "&"),
+        "\\\\"
+      )
+    })
+  paste(c(begin, X, end), collapse = "")
+}
+options(scipen=999)
+signe = function(x,texte){
+  y=ifelse(x>0 && x==1,paste("+",texte),ifelse(x>0,paste(paste0("+",x),texte),ifelse(x<0 && x==-1,paste("-",texte),ifelse(x<0,paste(paste0("-",abs(x)),texte),""))))
+  return(y)
+}
+signe.frac = function(num,denom,texte){
+  y=ifelse(num>0,paste(paste0("+\\frac{",num,"}{",denom,"}"),texte),ifelse(num<0,paste(paste0("-\\frac{",abs(num),"}{",denom,"}"),texte),""))
+  return(y)
+}
+
+signe0 = function(x,texte){
+  y=ifelse(x>0 && x==1,texte,ifelse(x>0,paste0(x,texte),ifelse(x<0 && x==-1,paste("-",texte),ifelse(x<0,paste(paste0("-",abs(x)),texte),""))))
+  return(y)
+}
+
+signe0.frac = function(num,denom,texte){
+  y=ifelse(num>0,paste(paste0("\\frac{",num,"}{",denom,"}"),texte),ifelse(num<0,paste(paste0("-\\frac{",abs(num),"}{",denom,"}"),texte),""))
+  return(y)
+}
+```
+
+```{r,echo=F}
+AA=matrix(c(1,1,0,1,2,2,1,-1,1,1,-1,2,3,-1,4,3,-1,-1,2,-3),nrow=4,byrow=T)
+```
+
+(@) Consideremos el siguiente sistema de ecuaciones con $4$ ecuaciones y $4$ incógnitas:
+
+\begin{align*}
+`r signe0(AA[1,1],"x_1")` `r signe(AA[1,2],"x_2")`  `r signe(AA[1,3],"x_3")`  `r signe(AA[1,4],"x_4")`  & =  `r AA[1,5]`,\\
+`r signe0(AA[2,1],"x_1")`  `r signe(AA[2,2],"x_2")`  `r signe(AA[2,3],"x_3")`  `r signe(AA[2,4],"x_4")`  &  =  `r AA[2,5]`,\\
+`r signe0(AA[3,1],"x_1")`   `r signe(AA[3,2],"x_2")`  `r signe(AA[3,3],"x_3")` `r signe(AA[3,4],"x_4")`  & =  `r AA[3,5]`,\\
+`r signe0(AA[4,1],"x_1")`  `r signe(AA[4,2],"x_2")`  `r signe(AA[4,3],"x_3")`  `r signe(AA[4,4],"x_4")`   & =   `r AA[4,5]`.
+\end{align*}
+
+Haz un programa que resuelva un sistema lineal usando el método de Gauss y a partir de dicho programa, resuelve el sistema anterior.
+
+```{r,echo=F}
+AA=matrix(c(1.19,2.11,-100,1,1.12,14.2,-0.122,12.2,-1,3.44,0,100,-99.9,1,2.15,15.3,0.11,-13.1,-1,4.16),nrow=4,byrow=T)
+```
+(@) Consideremos el siguiente sistema de ecuaciones con $4$ ecuaciones y $4$ incógnitas:
+
+\begin{align*}
+`r signe0(AA[1,1],"x_1")` `r signe(AA[1,2],"x_2")`  `r signe(AA[1,3],"x_3")`  `r signe(AA[1,4],"x_4")`  & =  `r AA[1,5]`,\\
+`r signe0(AA[2,1],"x_1")`  `r signe(AA[2,2],"x_2")`  `r signe(AA[2,3],"x_3")`  `r signe(AA[2,4],"x_4")`  &  =  `r AA[2,5]`,\\
+`r signe0(AA[3,1],"x_1")`   `r signe0(AA[3,2],"x_2")`  `r signe(AA[3,3],"x_3")` `r signe(AA[3,4],"x_4")`  & =  `r AA[3,5]`,\\
+`r signe0(AA[4,1],"x_1")`  `r signe(AA[4,2],"x_2")`  `r signe(AA[4,3],"x_3")`  `r signe(AA[4,4],"x_4")`   & =   `r AA[4,5]`.
+\end{align*}
+
+de solución $x_1=0.17682530,\ x_2=0.01269269,\ x_3=-0.02065405,\ x_4=-1.18260870$.
+
+a) Haz un programa que resuelva un sistema lineal usando el método de Gauss con pivotaje parcial y global.
+a) Usando el programa anterior, resolver el sistema anterior con pivotaje parcial usando aritmética de 4 dígitos y comparar con la solución exacta.
+a) Usando el programa anterior, resolver el sistema anterior con pivotaje global usando aritmética de 4 dígitos y comparar con la solución exacta.
+
+
+

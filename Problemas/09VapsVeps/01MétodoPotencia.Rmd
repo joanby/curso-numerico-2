@@ -1,0 +1,78 @@
+---
+title: "Problemas del método de la potencia   \n para hallar valores y vectores propios."
+author: ""
+date: ""
+output:
+  pdf_document: default
+              
+  html_document: default
+---
+
+\newcommand{\m}[1]{\mathbf{#1}}
+\newcommand{\s}[2]{\mathbf{#1}^{(#2)}}
+\newcommand{\pe}[2]{#1^\top #2}
+
+```{r,echo=FALSE}
+write_matex2 <- function(x) {
+  begin <- "\\begin{bmatrix}"
+  end <- "\\end{bmatrix}"
+  X <-
+    apply(x, 1, function(x) {
+      paste(
+        paste(x, collapse = "&"),
+        "\\\\"
+      )
+    })
+  paste(c(begin, X, end), collapse = "")
+}
+write_matex3 <- function(x) {
+  begin <- "\\begin{vmatrix}"
+  end <- "\\end{vmatrix}"
+  X <-
+    apply(x, 1, function(x) {
+      paste(
+        paste(x, collapse = "&"),
+        "\\\\"
+      )
+    })
+  paste(c(begin, X, end), collapse = "")
+}
+options(scipen=999)
+signe = function(x,texte){
+  y=ifelse(x>0 && x==1,paste("+",texte),ifelse(x>0,paste(paste0("+",x),texte),ifelse(x<0 && x==-1,paste("-",texte),ifelse(x<0,paste(paste0("-",abs(x)),texte),""))))
+  return(y)
+}
+signe.frac = function(num,denom,texte){
+  y=ifelse(num>0,paste(paste0("+\\frac{",num,"}{",denom,"}"),texte),ifelse(num<0,paste(paste0("-\\frac{",abs(num),"}{",denom,"}"),texte),""))
+  return(y)
+}
+
+signe0 = function(x,texte){
+  y=ifelse(x>0 && x==1,texte,ifelse(x>0,paste0(x,texte),ifelse(x<0 && x==-1,paste("-",texte),ifelse(x<0,paste(paste0("-",abs(x)),texte),""))))
+  return(y)
+}
+
+signe0.frac = function(num,denom,texte){
+  y=ifelse(num>0,paste(paste0("\\frac{",num,"}{",denom,"}"),texte),ifelse(num<0,paste(paste0("-\\frac{",abs(num),"}{",denom,"}"),texte),""))
+  return(y)
+}
+```
+
+
+```{r,echo=F}
+A=matrix(c(1,-1,0,-2,4,-2,0,-1,2),3,3,byrow=T)
+x0=c(-1,2,1)
+A2=matrix(c(4,1,1,1,1,3,-1,1,1,-1,2,0,1,1,0,2),4,4)
+x02=c(1,-2,0,3)
+```
+
+(@) Hacer un programa que, dada una matriz cuadrada $\m{A}$ halle una aproximación del valor propio de máximo módulo junto con un vector propio con una tolerancia $\epsilon$ y un valor inicial $\s{x}{0}$. Aplicar el método de la potencia para hallar el valor propio de módulo máximo junto con un vector propio correspondiente a la matriz $\m{A}=`r write_matex2(A)`$ usando como valor inicial $\s{x}{0}=`r write_matex2(as.matrix(x0))`$ con una tolerancia de $0.0001$.
+
+(@)  Hacer un programa que, dada una matriz cuadrada simétrica $\m{A}$ halle una aproximación del valor propio de máximo módulo junto con un vector propio con una tolerancia $\epsilon$ y un valor inicial $\s{x}{0}$. Aplicar el programa anterior para hallar valor propio de módulo máximo junto con un vector propio correspondiente a la matriz $\m{A}=`r write_matex2(A2)`$ usando como valor inicial $\s{x}{0}=`r write_matex2(as.matrix(x02))`$ con una tolerancia de $0.0001$.
+
+(@) Hacer un programa que dada una matriz $\m{A}$, un valor inicial $\s{x}{0}$, una tolerancia $\epsilon$ y un valor $a$, halle el valor propio de la matriz $\m{A}$ más cercano a $a$ junto con un vector propio asociado. Usar el programa anterior para hallar el valor propio más cercano a $2$ para las matrices de los dos primeros problemas con una tolerancia de $0.0001$ y $\s{x}{0}=\m{0}$.
+
+(@) Hacer un programa que, dada una matriz cuadrada $\m{A}$, el valor propio de módulo máximo $\lambda_1$ junto con un vector propio $\s{v}{1}$, halle todos los demás valores y vectores propios de la matriz usando el método de la deflación de Wielandt completo. Usar dicho programa para hallar todos los valores y vectores propios de las matrices de los dos primeros problemas.
+
+(@) **Deflación de Hotelling**. Sea $\m{A}$ una matriz simétrica con valor propio de módulo máximo $\lambda_1$ y con vector propio asociado $\s{v}{1}$. Sean $\lambda_2,\ldots,\lambda_n$ con $|\lambda_2|\geq \cdots \geq |\lambda_n|$ los otros valores propios con vectores propios asociados $\s{v}{1},\ldots,\s{v}{n}$. Demostrar que la matriz $\m{B}=\m{A}-\frac{\lambda_1}{\pe{(\s{v}{1})}{\s{v}{1}}}\s{v}{1}(\s{v}{1})^\top$ tiene como valores propios $0,\lambda_2,\ldots,\lambda_n$ con vectores propios asociados $\s{v}{1},\s{v}{2},\ldots,\s{v}{n}$. Hacer un programa que aplique dicho método y usarlo para hallar el valor propio $\lambda_2$ junto con el vector propio $\s{v}{2}$ a la matriz del problema 2.
+Hallar los demás valores propios y vectores propios asociados.

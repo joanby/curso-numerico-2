@@ -1,0 +1,95 @@
+---
+title: "Problemas de algebra lineal numérica"
+author: ""
+date: ""
+output:
+  pdf_document: default
+              
+  html_document: default
+---
+
+\newcommand{\m}[1]{\mathbf{#1}}
+\newcommand{\s}[2]{\mathbf{#1}^{(#2)}}
+\newcommand{\pe}[2]{#1^\top #2}
+
+```{r,echo=FALSE}
+write_matex2 <- function(x) {
+  begin <- "\\begin{bmatrix}"
+  end <- "\\end{bmatrix}"
+  X <-
+    apply(x, 1, function(x) {
+      paste(
+        paste(x, collapse = "&"),
+        "\\\\"
+      )
+    })
+  paste(c(begin, X, end), collapse = "")
+}
+write_matex3 <- function(x) {
+  begin <- "\\begin{vmatrix}"
+  end <- "\\end{vmatrix}"
+  X <-
+    apply(x, 1, function(x) {
+      paste(
+        paste(x, collapse = "&"),
+        "\\\\"
+      )
+    })
+  paste(c(begin, X, end), collapse = "")
+}
+options(scipen=999)
+signe = function(x,texte){
+  y=ifelse(x>0 && x==1,paste("+",texte),ifelse(x>0,paste(paste0("+",x),texte),ifelse(x<0 && x==-1,paste("-",texte),ifelse(x<0,paste(paste0("-",abs(x)),texte),""))))
+  return(y)
+}
+signe.frac = function(num,denom,texte){
+  y=ifelse(num>0,paste(paste0("+\\frac{",num,"}{",denom,"}"),texte),ifelse(num<0,paste(paste0("-\\frac{",abs(num),"}{",denom,"}"),texte),""))
+  return(y)
+}
+
+signe0 = function(x,texte){
+  y=ifelse(x>0 && x==1,texte,ifelse(x>0,paste0(x,texte),ifelse(x<0 && x==-1,paste("-",texte),ifelse(x<0,paste(paste0("-",abs(x)),texte),""))))
+  return(y)
+}
+
+signe0.frac = function(num,denom,texte){
+  y=ifelse(num>0,paste(paste0("\\frac{",num,"}{",denom,"}"),texte),ifelse(num<0,paste(paste0("-\\frac{",abs(num),"}{",denom,"}"),texte),""))
+  return(y)
+}
+```
+
+
+```{r,echo=FALSE}
+A=matrix(c(4,-1,0,-1,4,-1,-1,-1,4),3,3)
+B=matrix(c(3,2,1,2,3,0,1,0,3),3,3,byrow=T)
+D=matrix(c(1,0,0,-1,0,1,-1,-1,2),3,3,byrow=T)
+```
+
+(@) Dadas las matrices $\m{A}=`r write_matex2(A)`$, $\m{B}=`r write_matex2(B)`$ y $\m{D}=`r write_matex2(D)`$, calcular (si se puede), $\m{A}^{-1}$, $\m{B}^{-1}$ y $\m{D}^{-1}$.
+
+(@) Hallar los valores y vectores propios de las matrices del ejercicio anterior. ¿Son diagonalizables? En caso afirmativo, hallar la matriz de semejanza $\m{C}$ tal que nos trasforme la matriz correspondiente en la matriz diagonal de los valores propios y comprobar la relación entre dichas matrices.
+
+(@) Indicar si las matrices del ejercicio anterior son:
+    a) diagonal dominantes,
+    a) definidas positivas.
+
+(@) Calcular las normas $1$, euclídea y la norma infinito de las matrices de los ejercicios anteriores.
+
+```{r,echo=FALSE}
+P=matrix(c(2,-1,0,0,-1,2,-1,0,0,-1,2,-1,0,0,-1,2),4,4)
+```
+(@) Una matriz es **persimétrica** si es simétrica respecto ambas diagonales. Es decir, la matriz $\m{A}=(a_{ij})_{i,j=1,\ldots,n}$, $n\times n$ es **persimétrica** si $a_{ij}=a_{ji}=a_{n+1-i,n+1-j}$, para todo $i,j=1,\ldots,n$. Estas matrices se usan en problemas de **Teoría de comunicación**. 
+Consideremos la matriz **persimétrica** $\m{A}=`r write_matex2(P)`$. 
+
+a) Usando el Teorema de Gersgorin y el hecho de que la matriz $\m{A}$ sea simétrica para demostrar que si $\lambda$ es el valor propio de $\m{A}$ de módulo mínimo, entonces $|\lambda-4|=\rho(\m{A}-4\m{Id})$, siende $\rho(\cdot)$ el radio espectral.
+a) Calcular el valor del valor propio de módulo mínimo $\lambda$ de la matriz $\m{A}$ hallando todos los valores propios de $\m{A}-4\m{Id}$. Hallar el vector propio correspondiente.
+
+
+```{r,echo=FALSE}
+E=matrix(c(4,2,1,2,4,0,1,0,4),3,3)
+```
+(@) Dada la matriz simétrica $\m{A}=`r write_matex2(E)`$, hallar la matriz ortogonal $\m{Q}$ tal que $\m{Q}^\top\m{A}\m{Q}=\m{D}$, donde $\m{D}$ es una matriz diagonal.
+
+(@) Sean $\m{A}$ y $\m{B}$ dos matrices $n\times n$ no singulares. Demostrar que las matrices $\m{A}\m{B}$ y $\m{B}\m{A}$ son semejantes. Indicación: considerar la matriz $\m{B}$ como matriz de cambio de base.
+
+(@) Demostrar que si $\m{A}$, $\m{B}$ y $\m{D}$ son matrices $n\times n$ tal que $\m{A}$ y $\m{B}$ son semejantes y $\m{B}$ y $\m{D}$ son semejantes, entonces $\m{A}$ y $\m{D}$ son semejantes.

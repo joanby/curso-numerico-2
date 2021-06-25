@@ -1,0 +1,99 @@
+---
+title: "Problemas de métodos de ortogonalización   \n para hallar valores y vectores propios."
+author: ""
+date: ""
+output:
+  pdf_document: default
+              
+  html_document: default
+---
+
+\newcommand{\m}[1]{\mathbf{#1}}
+\newcommand{\s}[2]{\mathbf{#1}^{(#2)}}
+\newcommand{\pe}[2]{#1^\top #2}
+
+```{r,echo=FALSE}
+write_matex2 <- function(x) {
+  begin <- "\\begin{bmatrix}"
+  end <- "\\end{bmatrix}"
+  X <-
+    apply(x, 1, function(x) {
+      paste(
+        paste(x, collapse = "&"),
+        "\\\\"
+      )
+    })
+  paste(c(begin, X, end), collapse = "")
+}
+write_matex3 <- function(x) {
+  begin <- "\\begin{vmatrix}"
+  end <- "\\end{vmatrix}"
+  X <-
+    apply(x, 1, function(x) {
+      paste(
+        paste(x, collapse = "&"),
+        "\\\\"
+      )
+    })
+  paste(c(begin, X, end), collapse = "")
+}
+options(scipen=999)
+signe = function(x,texte){
+  y=ifelse(x>0 && x==1,paste("+",texte),ifelse(x>0,paste(paste0("+",x),texte),ifelse(x<0 && x==-1,paste("-",texte),ifelse(x<0,paste(paste0("-",abs(x)),texte),""))))
+  return(y)
+}
+signe.frac = function(num,denom,texte){
+  y=ifelse(num>0,paste(paste0("+\\frac{",num,"}{",denom,"}"),texte),ifelse(num<0,paste(paste0("-\\frac{",abs(num),"}{",denom,"}"),texte),""))
+  return(y)
+}
+
+signe0 = function(x,texte){
+  y=ifelse(x>0 && x==1,texte,ifelse(x>0,paste0(x,texte),ifelse(x<0 && x==-1,paste("-",texte),ifelse(x<0,paste(paste0("-",abs(x)),texte),""))))
+  return(y)
+}
+
+signe0.frac = function(num,denom,texte){
+  y=ifelse(num>0,paste(paste0("\\frac{",num,"}{",denom,"}"),texte),ifelse(num<0,paste(paste0("-\\frac{",abs(num),"}{",denom,"}"),texte),""))
+  return(y)
+}
+```
+
+```{r,echo=FALSE}
+A=matrix(c(1,1,0,0,1,2,-1,0,0,-1,3,1,0,0,1,5),4,4,byrow=T)
+A2=rbind(c("1-2\\alpha","\\alpha",0,0,"\\ldots",0),
+            c("\\alpha","1-2\\alpha","\\alpha",0,"\\ldots",0),
+            c(0,"\\alpha","1-2\\alpha","\\alpha","\\ldots",0),
+            c("\\vdots","\\vdots","\\vdots","\\ddots","\\vdots","\\vdots"),
+            c(0,"\\ldots",0,"\\alpha","1-2\\alpha","\\alpha"),
+            c(0,"\\ldots","\\ldots",0,"\\alpha","1-2\\alpha"))
+```
+
+(@) Hacer un programa que, dada una matriz cuadrada $\m{A}$, halle una aproximación de los valores propios de $\m{A}$ usando el método $QR$ con una tolerancia $\epsilon$. Usar el programa anterior para hallar una aproximación de los valores propios de la matriz $\m{A}=`r write_matex2(A)`$ con una tolerancia de $0.0001$.
+
+(@) La resolución numérica de un determinado tipo de ecuaciones en derivadas parciales requiere la resolución de sistemas lineales cuya matriz del sistema es de la forma:
+$$
+\m{A}=`r write_matex2(A2)`.
+$$
+Se dice que el método de resolución es estable si el radio espectral de dicha matriz es menor que $1$.
+Usando el método $QR$, averiguar si para $n=10$, si el método es estable para los siguientes valores de $\alpha$: $\alpha=\frac{1}{2},\frac{1}{3},\frac{1}{4}$.
+
+
+```{r,echo=FALSE}
+A3=matrix(c(-5,-2,0,0,-2,5,2,0,0,2,5,1,0,0,1,-5),4,4)
+```
+(@) Consideremos el siguiente sistema de ecuaciones diferenciales:
+\begin{align*}
+y_1'(t) & = -5 y_1(t)-2 y_2(t),\\
+y_2'(t) & = -2 y_1(t)+5 y_2(t)+2 y_3(t),\\
+y_3'(t) & = 2 y_2(t)+5 y_3(t)+y_4(t),\\
+y_4'(t) & = y_3(t)- 5 y_4(t).
+\end{align*}
+Dicho sistema se puede escribir en forma matricial en la forma siguiente: $\m{y}'(t)=\m{A}\m{y}(t)$, con $\m{A}=`r write_matex2(A3)`$ e $\m{y}(t)=\begin{bmatrix}y_1'(t)\\ y_2'(t)\\ y_3'(t)\\ y_4'(t)\end{bmatrix}$. La solución de dicho sistema puede escribirse como:
+$$
+\m{y}(t)=c_1\mathrm{e}^{\lambda_1 t}\s{v}{1}+c_2\mathrm{e}^{\lambda_2 t}\s{v}{2}+c_3\mathrm{e}^{\lambda_3 t}\s{v}{3}+c_4\mathrm{e}^{\lambda_4 t}\s{v}{4},
+$$
+donde $c_i$, $i=1,2,3,4$ son constantes libres que dependen de las condiciones iniciales del sistema, es decir $y_i(t_0)$, $i=1,2,3,4$, $\lambda_i$ son los valores propios de la matriz $\m{A}$ junto con unos vectores propios $\s{v}{i}$, $i=1,2,3,4$.
+    a) Comprobar que la solución dada por la expresión anterior verifica el sistema de ecuaciones diferenciales.
+    a) Usando el método $QR$ hallar los valores propios $\lambda_1,\lambda_2,\lambda_3$ y $\lambda_4$.
+    a) Usando el método de la potencia inversa hallar unos vectores propios $\s{v}{i}$, $i=1,2,3,4$.
+    a) Hallar la solución con condiciones iniciales $\m{y}(0)=(1,1,1,1)^\top$.

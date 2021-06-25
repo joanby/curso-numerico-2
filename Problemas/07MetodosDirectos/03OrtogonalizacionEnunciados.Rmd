@@ -1,0 +1,97 @@
+---
+title: "Problemas de métodos de ortogonalización para resolver sistemas lineales. Cálculo de inversas y determinantes. Análisis del error"
+author: ""
+date: ""
+output:
+  pdf_document: default
+              
+  html_document: default
+---
+
+\newcommand{\m}[1]{\mathbf{#1}}
+\newcommand{\s}[2]{\mathbf{#1}^{(#2)}}
+\newcommand{\pe}[2]{#1^\top #2}
+
+```{r,echo=FALSE}
+write_matex2 <- function(x) {
+  begin <- "\\begin{bmatrix}"
+  end <- "\\end{bmatrix}"
+  X <-
+    apply(x, 1, function(x) {
+      paste(
+        paste(x, collapse = "&"),
+        "\\\\"
+      )
+    })
+  paste(c(begin, X, end), collapse = "")
+}
+write_matex3 <- function(x) {
+  begin <- "\\begin{vmatrix}"
+  end <- "\\end{vmatrix}"
+  X <-
+    apply(x, 1, function(x) {
+      paste(
+        paste(x, collapse = "&"),
+        "\\\\"
+      )
+    })
+  paste(c(begin, X, end), collapse = "")
+}
+options(scipen=999)
+signe = function(x,texte){
+  y=ifelse(x>0 && x==1,paste("+",texte),ifelse(x>0,paste(paste0("+",x),texte),ifelse(x<0 && x==-1,paste("-",texte),ifelse(x<0,paste(paste0("-",abs(x)),texte),""))))
+  return(y)
+}
+signe.frac = function(num,denom,texte){
+  y=ifelse(num>0,paste(paste0("+\\frac{",num,"}{",denom,"}"),texte),ifelse(num<0,paste(paste0("-\\frac{",abs(num),"}{",denom,"}"),texte),""))
+  return(y)
+}
+
+signe0 = function(x,texte){
+  y=ifelse(x>0 && x==1,texte,ifelse(x>0,paste0(x,texte),ifelse(x<0 && x==-1,paste("-",texte),ifelse(x<0,paste(paste0("-",abs(x)),texte),""))))
+  return(y)
+}
+
+signe0.frac = function(num,denom,texte){
+  y=ifelse(num>0,paste(paste0("\\frac{",num,"}{",denom,"}"),texte),ifelse(num<0,paste(paste0("-\\frac{",abs(num),"}{",denom,"}"),texte),""))
+  return(y)
+}
+```
+
+```{r,echo=F}
+AA=matrix(c(1,1,0,1,2,2,1,-1,1,1,-1,2,3,-1,4,3,-1,-1,2,-3),nrow=4,byrow=T)
+```
+
+```{r,echo=F}
+AA=matrix(c(1,1,0,1,2,2,1,-1,1,1,-1,2,3,-1,4,3,-1,-1,2,-3),nrow=4,byrow=T)
+```
+
+(@) Haz un programa que dado un sistema de ecuaciones, lo resuelva usando la descomposición $QR$ de la matriz del sistema y aplicarlo al siguiente sistema de ecuaciones con $4$ ecuaciones y $4$ incógnitas:
+
+\begin{align*}
+`r signe0(AA[1,1],"x_1")` `r signe(AA[1,2],"x_2")`  `r signe(AA[1,3],"x_3")`  `r signe(AA[1,4],"x_4")`  & =  `r AA[1,5]`,\\
+`r signe0(AA[2,1],"x_1")`  `r signe(AA[2,2],"x_2")`  `r signe(AA[2,3],"x_3")`  `r signe(AA[2,4],"x_4")`  &  =  `r AA[2,5]`,\\
+`r signe0(AA[3,1],"x_1")`   `r signe(AA[3,2],"x_2")`  `r signe(AA[3,3],"x_3")` `r signe(AA[3,4],"x_4")`  & =  `r AA[3,5]`,\\
+`r signe0(AA[4,1],"x_1")`  `r signe(AA[4,2],"x_2")`  `r signe(AA[4,3],"x_3")`  `r signe(AA[4,4],"x_4")`   & =   `r AA[4,5]`.
+\end{align*}
+
+
+
+(@) Dada una matriz $\m{A}$, $n\times n$, demostrar que hallar el determinante de $\m{A}$ a partir de la definición requiere $\displaystyle n!\sum_{k=1}^{n-1}\frac{1}{k!}$ productos/divisiones y $n!-1$ sumas/restas. ¿Cuál es el órden de computación si usamos el método de Gauss, es decir, si $T(n)$ representa el número total de operaciones básicas usando el método de Gauss para calcular el determinante de una matriz $n\times n$, cuál es el valor de $k$ tal que $T(n)=O(n^k)$?
+
+```{r,echo=FALSE}
+A=matrix(c(2,-3,1,1,1,-1,-1,1,-3),3,3)
+```
+
+(@) Haz un programa que, dada un matriz $\m{A}$, halle halle su inversa y su determinante a partir de la descomposición $LU$ de dicha matriz y aplicarlo a la matriz $\m{A}=`r write_matex2(A)`$, es decir, hallar su determinante y su inversa usando el algoritmo descrito anteriormente.
+
+(@) Demostrar que para toda matriz cuadrada $\m{A}$ y para toda norma matricial $\|\cdot\|$, el número de condición de la matriz $\m{A}$, $\mu(\m{A})=\|\m{A}\|\cdot\|\m{A}^{-1}\|$ siempre es mayor o igual que $1$: $\mu(\m{A})\geq 1$.
+
+(@) Consideremos un sistema lineal $\m{A}\m{x}=\m{b}$. Supongamos que perturbamos el sistema anterior de la forma siguiente: $(\m{A}+\delta(\m{A}))(\m{x}+\delta (\m{x}))=\m{b}+\delta(\m{b})$, con
+$$
+\delta(\m{A})=\begin{bmatrix}\epsilon & \epsilon & \epsilon\\
+\epsilon & \epsilon & \epsilon\\
+\epsilon & \epsilon & \epsilon
+\end{bmatrix},\ \delta(\m{b})=\begin{bmatrix}\epsilon\\\epsilon\\\epsilon\end{bmatrix},
+$$
+con $\epsilon$ un valor pequeño. Acotar el error relativo de la solución $\|\m{x}\|$, $\frac{\|\delta(\m{x})\|}{\|\m{x}\|}$, en función de $\epsilon$, fijando una norma vectorial junto con la norma matricial subordinada.

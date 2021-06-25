@@ -1,0 +1,103 @@
+---
+title: "Problemas de métodos iterativos para resolver sistemas lineales."
+author: ""
+date: ""
+output:
+  pdf_document: default
+              
+  html_document: default
+---
+
+\newcommand{\m}[1]{\mathbf{#1}}
+\newcommand{\s}[2]{\mathbf{#1}^{(#2)}}
+\newcommand{\pe}[2]{#1^\top #2}
+
+```{r,echo=FALSE}
+write_matex2 <- function(x) {
+  begin <- "\\begin{bmatrix}"
+  end <- "\\end{bmatrix}"
+  X <-
+    apply(x, 1, function(x) {
+      paste(
+        paste(x, collapse = "&"),
+        "\\\\"
+      )
+    })
+  paste(c(begin, X, end), collapse = "")
+}
+write_matex3 <- function(x) {
+  begin <- "\\begin{vmatrix}"
+  end <- "\\end{vmatrix}"
+  X <-
+    apply(x, 1, function(x) {
+      paste(
+        paste(x, collapse = "&"),
+        "\\\\"
+      )
+    })
+  paste(c(begin, X, end), collapse = "")
+}
+options(scipen=999)
+signe = function(x,texte){
+  y=ifelse(x>0 && x==1,paste("+",texte),ifelse(x>0,paste(paste0("+",x),texte),ifelse(x<0 && x==-1,paste("-",texte),ifelse(x<0,paste(paste0("-",abs(x)),texte),""))))
+  return(y)
+}
+signe.frac = function(num,denom,texte){
+  y=ifelse(num>0,paste(paste0("+\\frac{",num,"}{",denom,"}"),texte),ifelse(num<0,paste(paste0("-\\frac{",abs(num),"}{",denom,"}"),texte),""))
+  return(y)
+}
+
+signe0 = function(x,texte){
+  y=ifelse(x>0 && x==1,texte,ifelse(x>0,paste0(x,texte),ifelse(x<0 && x==-1,paste("-",texte),ifelse(x<0,paste(paste0("-",abs(x)),texte),""))))
+  return(y)
+}
+
+signe0.frac = function(num,denom,texte){
+  y=ifelse(num>0,paste(paste0("\\frac{",num,"}{",denom,"}"),texte),ifelse(num<0,paste(paste0("-\\frac{",abs(num),"}{",denom,"}"),texte),""))
+  return(y)
+}
+```
+
+```{r,echo=F}
+AA=matrix(c(10,5,0,0,6,5,10,-4,0,25,0,-4,8,-1,-11,0,0,-1,5,-11),nrow=4,byrow=T)
+```
+
+
+(@) Consideremos el siguiente sistema de ecuaciones con $4$ ecuaciones y $4$ incógnitas:
+
+\begin{align*}
+`r signe0(AA[1,1],"x_1")` `r signe(AA[1,2],"x_2")`  `r signe(AA[1,3],"x_3")`  `r signe(AA[1,4],"x_4")`  & =  `r AA[1,5]`,\\
+`r signe0(AA[2,1],"x_1")`  `r signe(AA[2,2],"x_2")`  `r signe(AA[2,3],"x_3")`  `r signe(AA[2,4],"x_4")`  &  =  `r AA[2,5]`,\\
+`r signe0(AA[3,1],"x_1")`   `r signe(AA[3,2],"x_2")`  `r signe(AA[3,3],"x_3")` `r signe(AA[3,4],"x_4")`  & =  `r AA[3,5]`,\\
+`r signe0(AA[4,1],"x_1")`  `r signe(AA[4,2],"x_2")`  `r signe(AA[4,3],"x_3")`  `r signe(AA[4,4],"x_4")`   & =   `r AA[4,5]`.
+\end{align*}
+
+a) Haz un programa que, dado un sistema lineal, un valor inicial $\s{x}{0}$ y una tolerancia $\epsilon$ halle la solución aproximada del sistema usando la tolerancia anterior usando los métodos de Jacobi y Gauss-Seidel. 
+a) Usando el programa anterior con el método de Jacobi, con $\s{x}{0}=\m{0}$, resolver el sistema anterior con una tolerancia de $0.0001$ en la norma infinito.
+a) Hacer lo mismo pero usando el método de Gauss-Seidel.
+
+```{r,echo=FALSE}
+A=rbind(c("1","-\\frac{1}{2}",0,0,"\\ldots",0),
+            c("-\\frac{1}{2}","1","-\\frac{1}{2}",0,"\\ldots",0),
+            c(0,"-\\frac{1}{2}","1","-\\frac{1}{2}","\\ldots",0),
+            c("\\vdots","\\vdots","\\vdots","\\ddots","\\vdots","\\vdots"),
+            c(0,"\\ldots",0,"-\\frac{1}{2}","1","-\\frac{1}{2}"),
+            c(0,"\\ldots","\\ldots",0,"-\\frac{1}{2}","1"))
+```
+
+(@) Supongamos que un objeto puede estar en $n+1$ puntos equiespaciados $x_0,x_1,\ldots,x_n$ de una recta. Cuando el objeto está en la posición $x_i$, se puede mover con igual probabilidad a $x_{i-1}$ o $x_{i+1}$ y no se puede mover a ningún otro lugar. En el caso en que el objeto esté en $x_0$, sólo se puede mover a $x_1$ y si está en $x_n$ sólo se puede mover a $x_{n-1}$. Supongamos que el objeto está en la posición $x_i$. Definimos $P_i$ como la probabilidad de que el objeto alcance la posición $x_0$ antes que la posición $x_n$, para $i=0,1,\ldots,n$. Claramente $P_0=1$ y $P_n=0$. Además, como el objeto si está en la posición $x_i$, sólo se puede mover a $x_{i-1}$ o $x_{i+1}$ con la misma probabilidad, se verifica que 
+$$
+P_i=\frac{1}{2}P_{i-1}+\frac{1}{2}P_{i+1},\quad i=1,2,\ldots,n.
+$$
+a) Demostrar que:
+$$
+`r write_matex2(A)`\begin{bmatrix}P_1\\ P_2\\\vdots\\ P_{n-1}\end{bmatrix}=\begin{bmatrix}\frac{1}{2}\\ 0\\\vdots \\0\end{bmatrix}
+$$
+a) Usando los programas del ejercicio anterior, resolver el sistema anterior para $n=10,50$ y $n=100$ usando los métodos de Jacobi y Gauss-Seidel con una tolerancia de $0.0001$ y $\s{x}{0}=\m{0}$.
+a) Cambiar las probabilidades de ir a $x_{i-1}$ o $x_{i+1}$ por $\alpha$ y deducir que sistema lineal resulta para las probabilidades $P_i$, $i=1,\ldots,n-1$.
+a) Resolver el sistema anterior para $\alpha=\frac{1}{3}$.
+
+(@) Haz un programa que, dado un sistema lineal, un valor inicial $\s{x}{0}$, un valor $\omega$ y una tolerancia $\epsilon$, halle una solución aproximada del sistema lineal usando el método S.O.R. con una tolerancia $\epsilon$ y con valor inicial $\s{x}{0}$. Usando dicho programa, resolver el sistema del problema 1 usando el método de sobrerelajación con $\s{x}{0}=\m{0}$, $\omega =1.5$ con una tolerancia de $0.0001$.
+
+(@) La matriz del problema 2 es simétrica, definida positiva y tridiagonal para cualquier valor de $n$. Vamos a estimar el parámetro $\tilde{w}$ óptimo si se usa el método S.O.R. para resolver el sistema de dicho ejercicio para $n=10$.
+Para ello, considerar $19$ parámetros $w_i$ equiespaciados en el intervalo $(0,2)$: $w_i=\frac{i}{10}$, $i=1,\ldots,19$ y calcular el número de iteraciones necesarias para hallar la solución con una tolerancia de $0.0001$. Realizar un gráfico del número de iteraciones en función de los parámetros $w_i$ y estimar el mínimo. A partir de dicho mínimo, estimar el valor de $\rho(\m{T}_J)$, donde $\rho(\m{T}_J)$ es el radio espectral si usamos el método de Jacobi.

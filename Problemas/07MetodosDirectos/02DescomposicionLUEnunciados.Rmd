@@ -1,0 +1,151 @@
+---
+title: "Problemas de métodos directos para resolver sistemas lineales. Descomposición $LU$ y variantes."
+author: ""
+date: ""
+output:
+  pdf_document: default
+              
+  html_document: default
+---
+
+\newcommand{\m}[1]{\mathbf{#1}}
+\newcommand{\s}[2]{\mathbf{#1}^{(#2)}}
+\newcommand{\pe}[2]{#1^\top #2}
+
+```{r,echo=FALSE}
+write_matex2 <- function(x) {
+  begin <- "\\begin{bmatrix}"
+  end <- "\\end{bmatrix}"
+  X <-
+    apply(x, 1, function(x) {
+      paste(
+        paste(x, collapse = "&"),
+        "\\\\"
+      )
+    })
+  paste(c(begin, X, end), collapse = "")
+}
+write_matex3 <- function(x) {
+  begin <- "\\begin{vmatrix}"
+  end <- "\\end{vmatrix}"
+  X <-
+    apply(x, 1, function(x) {
+      paste(
+        paste(x, collapse = "&"),
+        "\\\\"
+      )
+    })
+  paste(c(begin, X, end), collapse = "")
+}
+options(scipen=999)
+signe = function(x,texte){
+  y=ifelse(x>0 && x==1,paste("+",texte),ifelse(x>0,paste(paste0("+",x),texte),ifelse(x<0 && x==-1,paste("-",texte),ifelse(x<0,paste(paste0("-",abs(x)),texte),""))))
+  return(y)
+}
+signe.frac = function(num,denom,texte){
+  y=ifelse(num>0,paste(paste0("+\\frac{",num,"}{",denom,"}"),texte),ifelse(num<0,paste(paste0("-\\frac{",abs(num),"}{",denom,"}"),texte),""))
+  return(y)
+}
+
+signe0 = function(x,texte){
+  y=ifelse(x>0 && x==1,texte,ifelse(x>0,paste0(x,texte),ifelse(x<0 && x==-1,paste("-",texte),ifelse(x<0,paste(paste0("-",abs(x)),texte),""))))
+  return(y)
+}
+
+signe0.frac = function(num,denom,texte){
+  y=ifelse(num>0,paste(paste0("\\frac{",num,"}{",denom,"}"),texte),ifelse(num<0,paste(paste0("-\\frac{",abs(num),"}{",denom,"}"),texte),""))
+  return(y)
+}
+```
+
+```{r,echo=F}
+AA=matrix(c(1,1,0,1,2,2,1,-1,1,1,-1,2,3,-1,4,3,-1,-1,2,-3),nrow=4,byrow=T)
+```
+
+
+```{r,echo=FALSE}
+A=matrix(c(2,-3,1,1,1,-1,-1,1,-3),3,3)
+```
+
+
+
+
+```{r,echo=FALSE}
+L1=matrix(c(1,0,0,2,1,0,-1,0,1),3,3,byrow=T)
+U1=matrix(c(2,3,-1,0,-2,1,0,0,3),3,3,byrow=T)
+```
+
+(@)  Resuelve el siguiente sistema de ecuaciones:
+$$
+`r write_matex2(L1)`\cdot`r write_matex2(U1)`\begin{bmatrix} x_1\\ x_2\\ x_3\end{bmatrix}=\begin{bmatrix}2\\ -1\\ 1\end{bmatrix}.
+$$
+
+```{r,echo=F}
+AA=matrix(c(1,1,0,1,2,2,1,-1,1,1,-1,2,3,-1,4,3,-1,-1,2,-3),nrow=4,byrow=T)
+```
+
+(@) Haz un programa que resuelva un sistema de ecuaciones usando el método $LU$ y aplicarlo para resolver el siguiente sistema de ecuaciones con $4$ ecuaciones y $4$ incógnitas:
+
+\begin{align*}
+`r signe0(AA[1,1],"x_1")` `r signe(AA[1,2],"x_2")`  `r signe(AA[1,3],"x_3")`  `r signe(AA[1,4],"x_4")`  & =  `r AA[1,5]`,\\
+`r signe0(AA[2,1],"x_1")`  `r signe(AA[2,2],"x_2")`  `r signe(AA[2,3],"x_3")`  `r signe(AA[2,4],"x_4")`  &  =  `r AA[2,5]`,\\
+`r signe0(AA[3,1],"x_1")`   `r signe(AA[3,2],"x_2")`  `r signe(AA[3,3],"x_3")` `r signe(AA[3,4],"x_4")`  & =  `r AA[3,5]`,\\
+`r signe0(AA[4,1],"x_1")`  `r signe(AA[4,2],"x_2")`  `r signe(AA[4,3],"x_3")`  `r signe(AA[4,4],"x_4")`   & =   `r AA[4,5]`.
+\end{align*}
+
+
+```{r,echo=FALSE}
+A=matrix(c(1,2,-1,1,2,3,2,-1,4),3,3,byrow=T)
+```
+
+(@) Consideremos la matriz $\m{A}=`r write_matex2(A)`$. Comprobar que no se puede aplicar la descomposición $LU$ a dicha matriz y hallar una factorización de $\m{A}$ de la forma $\m{A}=\m{P}^\top\m{L}\m{U}$, siendo $\m{P}$ una matriz de permutación.
+
+
+```{r,echo=F}
+A=matrix(c(4,1,1,1,1,3,-1,1,1,-1,2,0,1,1,0,2),4,4)
+```
+
+(@) Haz un programa que dada una matriz $\m{A}$ halle la descomposición de Choleski de dicha matriz, es decir, que  halle una matriz triangular inferior $\m{L}$ tal que $\m{A}=\m{L}\m{L}^\top$. Aplicarlo a hallar la descomposición de Choleski de la matriz $\m{A}=`r write_matex2(A)`$, 
+
+<!-- (@) Supongamos que en un sistema biológico hay $n$ especies y $m$ fuentes de comida. Supongamos que $x_j$ representa la población de la especie $j$-ésima, $j=1,\ldots,n$, $b_i$ representa la cantidad de comida diaria que hay del tipo $i$-ésimo, $i=1,\ldots,m$ y $a_{ij}$ representa la cantidad de comida diaria del tipo $i$-ésimo consumida por cada unidad de la especie $j$-ésima. El sistema lineal: -->
+
+<!-- \begin{align*} -->
+<!-- a_{11}x_1+a_{12}x_2+\cdots +a_{1n}x_n &= b_1,\\ -->
+<!-- a_{21}x_1+a_{22}x_2+\cdots +a_{2n}x_n & = b_2,\\ -->
+<!-- \vdots & \\ -->
+<!-- a_{m1}x_1+a_{m2}x_2+\cdots +a_{mn}x_n & = b_m, -->
+<!-- \end{align*} -->
+
+<!-- representa un equilibrio donde la cantidad de comida diaria es consumida por las especies del sistema biológico. -->
+
+```{r,echo=FALSE}
+A.escarabajo =rbind(c("b_{1}","b_{2}","b_3","b_{4}"),
+            c("p_{1}","0","0","0"),
+            c("0","p_{2}","0","0"),
+            c("0","0","p_{3}","0"))
+```
+
+```{r,echo=FALSE}
+AA=matrix(c(3,1,0,-1,2,4,1,7,0,2,5,9),nrow=3,byrow=T)
+```
+
+(@) Haz un programa que dada una matriz tridiagonal $\m{A}$ halle la descomposición de Crout de dicha matriz y aplicarlo para resolver el siguiente sistema de ecuaciones tridiagonal:
+\begin{align*}
+`r signe0(AA[1,1],"x_1")` `r signe(AA[1,2],"x_2")`  `r signe(AA[1,3],"x_3")`    & =  `r AA[1,4]`,\\
+`r signe0(AA[2,1],"x_1")`  `r signe(AA[2,2],"x_2")`  `r signe(AA[2,3],"x_3")`   &  =  `r AA[2,4]`,\\
+`r signe0(AA[3,1],"x_1")`   `r signe0(AA[3,2],"x_2")`  `r signe(AA[3,3],"x_3")`  & =  `r AA[3,4]`.
+\end{align*}
+
+(@) Supongamos que una especie de escarabajo tiene un vida media de 4 años. El $100 p_1\%$ sobreviven el primer año, el $100p_2\%$ de los que sobreviven el primer año sobreviven el segundo año y el $100p_3\%$ de los que sobreviven 2 años sobreviven 3 años. Cada hembra de primer año hace que nazcan $b_1$ nuevos escarabajos hembras; cada hembra de segundo año, $b_2$; cada hembra de tercer año, $b_3$ y cada hembra de último año, $b_4$ nuevos escarabajos hembras. Podemos modelar el comportamiento de la especie usando una matriz $\m{A}$, $4\times 4$ de la forma siguiente:
+sean $x_1^{(t)},x_2^{(t)},x_3^{(t)}$ y $x_4^{(t)}$ el número de escarabajos hembras el año $t$ de $1$, $2$, $3$ y $4$ años de edad. Entonces el número de escarabajos hembra el año $t+1$ será:
+$$
+\begin{bmatrix}
+x_1^{(t+1)}\\ x_2^{(t+1)}\\ 
+x_3^{(t+1)}\\ x_4^{(t+1)}
+\end{bmatrix}=`r write_matex2(A.escarabajo)`\begin{bmatrix}
+x_1^{(t)}\\ x_2^{(t)}\\ 
+x_3^{(t)}\\ x_4^{(t)}
+\end{bmatrix}
+$$
+a) Usando la descomposición $\m{L}\m{U}$ o la descomposición $\m{P}^\top\m{L}\m{U}$ con $b_1=0$, $b_2=\frac{1}{8}$, $b_3=\frac{1}{4}$, $b_4=\frac{1}{2}$, $p_1=\frac{1}{2}$, $p_2=\frac{1}{4}$ y $p_3=\frac{1}{8}$, hallar el número de escarabajos hembra de cada edad que se necesitan si la población de escarabajos hembra al cabo de un año son de 175 de 1 año de edad, 100, de dos años de edad, 50, de tres años de edad y 25 de cuatro años de edad.
+a) Repetir el apartado anterior pero cambiando el número de escarabajos hembra al cabo de un año por 100 escarabajos de cada edad.
