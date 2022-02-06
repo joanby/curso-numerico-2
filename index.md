@@ -7,12 +7,12 @@ Materiales del curso de [Métodos Numéricos con Python - Parte 2 Cálculo Numé
 
 Puedes consultar todo el material complementario del curso en nuestro [Github.io](https://joanby.github.io/curso-numerico-2/).
 
-1. [Álgebra Lineal Numérica](https://joanby.github.io/curso-numerico-2/Teoria/06AlgebraLinealNumerica#1). 
-2. [Métodos Directos](https://joanby.github.io/curso-numerico-2/Teoria/07MetodosDirectosSistemas#1)
-3. [Métodos Iterativos](https://joanby.github.io/curso-numerico-2/Teoria/08MetodosIterativosSistemas#1)
-4. [Valores y Vectores Propios - Métodos de la Potencia](https://joanby.github.io/curso-numerico-2/Teoria/09VapsVeps#1)
-5. [Valores y Vectores Propios - Métodos de Householder](https://joanby.github.io/curso-numerico-2/Teoria/09VapsVeps2parte#1)
-6. [Valores y Vectores Propios - Descomposición en Valor Singular](https://joanby.github.io/curso-numerico-2/Teoria/09VapsVeps3parte#1)
+1. [Álgebra Lineal Numérica](https://joanby.github.io/curso-numerico-2/docs/06AlgebraLinealNumerica#1). 
+2. [Métodos Directos](https://joanby.github.io/curso-numerico-2/docs/07MetodosDirectosSistemas#1)
+3. [Métodos Iterativos](https://joanby.github.io/curso-numerico-2/docs/08MetodosIterativosSistemas#1)
+4. [Valores y Vectores Propios - Métodos de la Potencia](https://joanby.github.io/curso-numerico-2/docs/09VapsVeps#1)
+5. [Valores y Vectores Propios - Métodos de Householder](https://joanby.github.io/curso-numerico-2/docs/09VapsVeps2parte#1)
+6. [Valores y Vectores Propios - Descomposición en Valor Singular](https://joanby.github.io/curso-numerico-2/docs/09VapsVeps3parte#1)
 
 Las matemáticas son necesarias en muchos aspectos de la tecnología del siglo XXI, sobretodo cuando se trata de temas como Machine Learning, Inteligencia Artificial o Data Science. En estas ramas, son muchos los algoritmos que se utilizan para optimizar y tener algoritmos robustos, pero pocas las personas que lo entienden. Nuestra trilogía de cursos de métodos numéricos ha vuelto con la segunda parte, álgebra lineal numérica para darle un giro de 180 grados a esta forma de trabajar y a explicarte todo lo que necesitas saber sobre algoritmos, su validez, en cuánto se equivocan y cual es el pseudocódigo línea a línea totalmente explicado de los mismos para que los puedas programar en cualquier lenguaje de programación. 
 
